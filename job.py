@@ -1,13 +1,18 @@
 from locust import HttpUser, task, between, TaskSet, tag
 import random
 import os
+import string
+from loguru import logger
 
+longest_input = ''.join(random.choices(string.ascii_letters + string.digits, k=2048))
 
 # 生成固定长度的随机字符串
 def random_string(length):
-    import random
-    import string
+    if not os.environ.get('RANDOM_STRING'):
+        return longest_input[:length]
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+
 
 
 def chat_data(input_len=128, output_len=128):
