@@ -57,7 +57,7 @@ text = """
 def run():
     global text
     # 首响应时间测试
-    text = "\n"
+    # text = "\n"
     text += task(INPUT_LENS="93", OUTPUT_LENS="1", user=5, rate=1, time_="20s", tags="chat", remark="首响应时间测试")
     text += task(INPUT_LENS="93", OUTPUT_LENS="1", user=4, rate=1, time_="20s", tags="chat", remark="首响应时间测试")
     text += task(INPUT_LENS="93", OUTPUT_LENS="1", user=2, rate=1, time_="20s", tags="chat", remark="首响应时间测试")
