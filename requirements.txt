@@ -1,0 +1,5 @@
+locust
+uvicorn
+loguru
+fastapi
+pandas
