@@ -39,9 +39,9 @@ def generation_data(input_len=128, output_len=128, model="codebase"):
 
 
 class Config:
-    input_lens = random.choice([int(i)
+    input_len = random.choice([int(i)
                                 for i in os.environ.get('INPUT_LENS', '1').split(',')])
-    output_lens = random.choice([int(i)
+    output_len = random.choice([int(i)
                                  for i in os.environ.get('OUTPUT_LENS', '1').split(',')])
     model = os.environ.get('model', 'codechat')
     headers = {
@@ -55,7 +55,7 @@ class QuickstartUser(HttpUser):
     @task
     def chat(self):
         self.client.post("/v1/chat/completions",
-                         json=chat_data(input_len=input_len, output_len=output_len, model=Config.model), headers=Config.headers)
+                         json=chat_data(input_len=Config.input_len, output_len=Config.output_len, model=Config.model), headers=Config.headers)
 
     @tag('completions')
     @task
