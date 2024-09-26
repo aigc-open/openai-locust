@@ -21,6 +21,7 @@ class TagEnum(str, Enum):
 
 
 class TaskRequest(BaseModel):
+    model: str = "codechat"
     input_lens: str = "1,2"
     output_lens: str = "1,2"
     user: int = 10
@@ -28,11 +29,12 @@ class TaskRequest(BaseModel):
     time_: str = "10s"
     tags: TagEnum = TagEnum.chat_completions  # 使用 Enum 限制 tags 的值
     remark: str = ""
-    host: str = "https://easycoder.puhuacloud.com"  # 添加 host 字段
+    host: str = "https://api.openai.com"  # 添加 host 字段
     RANDOM_STRING: bool = False
+    API_KEY: str = ""
 
 
-def task(INPUT_LENS: str, OUTPUT_LENS: str, user: int = 10, rate: int = 10, time_: str = "10s", tags: TagEnum = TagEnum.chat_completions, remark: str = "", host: str = "", RANDOM_STRING: bool = False):
+def task(model: str, INPUT_LENS: str, OUTPUT_LENS: str, user: int = 10, rate: int = 10, time_: str = "10s", tags: TagEnum = TagEnum.chat_completions, remark: str = "", host: str = "", RANDOM_STRING: bool = False, API_KEY: str = ""):
     logger.info(f"是否随机输入字符串: {RANDOM_STRING}")
     if RANDOM_STRING:
         RANDOM_STRING = "true"
@@ -40,7 +42,7 @@ def task(INPUT_LENS: str, OUTPUT_LENS: str, user: int = 10, rate: int = 10, time
         RANDOM_STRING = ""
 
     # 在命令中添加 --host 参数
-    os.system(f"RANDOM_STRING={RANDOM_STRING} INPUT_LENS={INPUT_LENS} OUTPUT_LENS={OUTPUT_LENS} locust -f src/job.py --host {host} --tags {tags} --headless -u {user} -r {rate} --run-time {time_} --only-summary --csv csv")
+    os.system(f"RANDOM_STRING={RANDOM_STRING} INPUT_LENS={INPUT_LENS} OUTPUT_LENS={OUTPUT_LENS} model={model} API_KEY={API_KEY} locust -f src/job.py --host {host} --tags {tags} --headless -u {user} -r {rate} --run-time {time_} --only-summary --csv csv")
 
     # 读取 CSV 文件
     data = pd.read_csv(f"csv_stats.csv")
@@ -61,6 +63,7 @@ def task(INPUT_LENS: str, OUTPUT_LENS: str, user: int = 10, rate: int = 10, time
 async def run_task(task_request: TaskRequest):
     try:
         result = task(
+            model=task_request.model,
             INPUT_LENS=task_request.input_lens,
             OUTPUT_LENS=task_request.output_lens,
             user=task_request.user,
@@ -69,7 +72,8 @@ async def run_task(task_request: TaskRequest):
             tags=task_request.tags,  # 传递 tags 参数
             remark=task_request.remark,
             host=task_request.host,  # 传递 host 参数
-            RANDOM_STRING=task_request.RANDOM_STRING
+            RANDOM_STRING=task_request.RANDOM_STRING,
+            API_KEY=task_request.API_KEY
         )
         return {"status": "success", "result": result}
     except Exception as e:

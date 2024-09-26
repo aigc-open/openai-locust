@@ -16,9 +16,9 @@ def random_string(length):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
-def chat_data(input_len=128, output_len=128):
+def chat_data(input_len=128, output_len=128, model="codechat"):
     return {
-        "model": "codechat",
+        "model": model,
         "messages": [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": random_string(input_len)}
@@ -29,12 +29,23 @@ def chat_data(input_len=128, output_len=128):
     }
 
 
-def generation_data(input_len=128, output_len=128):
+def generation_data(input_len=128, output_len=128, model="codebase"):
     return {
-        "model": "codebase",
+        "model": model,
         "prompt": random_string(input_len),
         "max_tokens": output_len,
         "temperature": 0.0
+    }
+
+
+class Config:
+    input_lens = random.choice([int(i)
+                                for i in os.environ.get('INPUT_LENS', '1').split(',')])
+    output_lens = random.choice([int(i)
+                                 for i in os.environ.get('OUTPUT_LENS', '1').split(',')])
+    model = os.environ.get('model', 'codechat')
+    headers = {
+        "Authorization": os.environ.get("API_KEY", "")
     }
 
 
@@ -43,23 +54,11 @@ class QuickstartUser(HttpUser):
     @tag('chat_completions')
     @task
     def chat(self):
-        input_lens = [int(i)
-                      for i in os.environ.get('INPUT_LENS', '1').split(',')]
-        output_lens = [int(i) for i in os.environ.get(
-            'OUTPUT_LENS', '1').split(',')]
-        input_len = random.choice(input_lens)
-        output_len = random.choice(output_lens)
         self.client.post("/v1/chat/completions",
-                         json=chat_data(input_len=input_len, output_len=output_len))
+                         json=chat_data(input_len=input_len, output_len=output_len, model=Config.model), headers=Config.headers)
 
     @tag('completions')
     @task
     def base(self):
-        input_lens = [int(i)
-                      for i in os.environ.get('INPUT_LENS', '1').split(',')]
-        output_lens = [int(i) for i in os.environ.get(
-            'OUTPUT_LENS', '1').split(',')]
-        input_len = random.choice(input_lens)
-        output_len = random.choice(output_lens)
         self.client.post("/v1/completions",
-                         json=generation_data(input_len=input_len, output_len=output_len))
+                         json=generation_data(input_len=Config.input_len, output_len=Config.output_len, model=Config.model), headers=Config.headers)

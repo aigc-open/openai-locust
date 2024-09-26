@@ -258,7 +258,17 @@
 
                         <div class="mb-3">
                             <label for="host" class="form-label">主机：</label>
-                            <input type="url" id="host" name="host" class="form-control" value="https://easycoder.puhuacloud.com">
+                            <input type="url" id="host" name="host" class="form-control" value="https://api.openai.com">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="model" class="form-label">模型：</label>
+                            <input type="text" id="model" name="model" class="form-control" value="codechat">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="apiKey" class="form-label">API Key：</label>
+                            <input type="text" id="apiKey" name="API_KEY" class="form-control">
                         </div>
 
                         <button type="submit" class="btn btn-primary mt-4 w-100">
@@ -298,6 +308,8 @@
                 settings.output_lens = $('#outputLength').val().join(',');
                 settings.time_ = settings.time_ + 's';
                 settings.RANDOM_STRING = formData.get('RANDOM_STRING') === 'on';
+                settings.model = formData.get('model');
+                settings.API_KEY = formData.get('API_KEY');
 
                 const selectedTag = $('#tags').val();
 

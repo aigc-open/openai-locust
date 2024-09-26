@@ -51,7 +51,7 @@ You can configure the task parameters in the `TaskRequest` model. The following 
 - `time_`: Duration for which the test will run (default: "10s").
 - `tags`: Tags for the task (default: `chat_completions`).
 - `remark`: Optional remark for the task.
-- `host`: Host URL for the Locust test (default: "https://easycoder.puhuacloud.com").
+- `host`: Host URL for the Locust test (default: "https://api.openai.com").
 - `RANDOM_STRING`: Boolean to indicate if random input strings should be used (default: False).
 
 ## Running the Application
@@ -75,7 +75,8 @@ You can then access the application at `http://localhost:50000`.
   **Request Example:**
 
   ```json
-  {
+    {
+    "model": "codechat",
     "input_lens": "1,2",
     "output_lens": "1,2",
     "user": 10,
@@ -83,9 +84,10 @@ You can then access the application at `http://localhost:50000`.
     "time_": "10s",
     "tags": "chat_completions",
     "remark": "",
-    "host": "https://easycoder.puhuacloud.com",
-    "RANDOM_STRING": false
-  }
+    "host": "https://api.openai.com",
+    "RANDOM_STRING": false,
+    "API_KEY": ""
+    }
   ```
 
   **Response Example:**
