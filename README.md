@@ -1,4 +1,4 @@
-# Demo界面
+# Demo Page
 - zh
 ![](./docs/zh.png)
 - en
