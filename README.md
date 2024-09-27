@@ -1,5 +1,8 @@
 # Demo界面
-![](./docs/page.png)
+- zh
+![](./docs/zh.png)
+- en
+![](./docs/en.png)
 
 # FastAPI Task Runner
 

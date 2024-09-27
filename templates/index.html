@@ -55,16 +55,19 @@
             letter-spacing: 1px;
         }
 
-        .big-title {
-            text-align: center;
-            font-size: 2.5rem;
+        .navbar {
+            padding: 1rem;
+            background-color: var(--card-background) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand.big-title {
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-color);
-            margin-top: 2rem;
-            margin-bottom: 2rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            animation: fadeIn 1s ease-out;
+            letter-spacing: 1px;
+            margin-right: 1rem;
         }
 
         .form-control, .form-select, .select2-container--default .select2-selection--multiple {
@@ -187,21 +190,51 @@
         .select2-container--default .select2-search--inline .select2-search__field {
             margin-top: 7px;
         }
+
+        #languageSelect {
+            width: auto;
+            min-width: 100px;
+            font-size: 0.875rem;
+            border-radius: 20px;
+            padding: 0.25rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        #languageSelect:focus {
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        #languageSelect option {
+            background-color: white;
+            color: var(--text-color);
+        }
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <h1 class="navbar-brand m-0 big-title" data-lang-key="title">VLLM私有模型openai接口压力测试</h1>
+            <div class="ms-auto">
+                <select id="languageSelect" class="form-select form-select-sm">
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+        </div>
+    </nav>
     <div class="background"></div>
-    <h1 class="big-title">VLLM私有模型openai接口压力测试</h1>
     <div class="container-fluid">
         <div class="row w-100">
             <div class="col-md-5">
                 <div class="card p-4 animate-fade-in">
-                    <h2><i class="fas fa-cogs me-2"></i>设置</h2>
+                    <h2><i class="fas fa-cogs me-2"></i><span data-lang-key="settings">设置</span></h2>
                     <form id="settingsForm">
-                        <h4 class="mt-4 mb-3"><i class="fas fa-sliders-h me-2"></i>常规设置</h4>
+                        <h4 class="mt-4 mb-3"><i class="fas fa-sliders-h me-2"></i><span data-lang-key="generalSettings">常规设置</span></h4>
 
                         <div class="mb-3">
-                            <label for="inputLength" class="form-label">输入长度：</label>
+                            <label for="inputLength" class="form-label" data-lang-key="inputLength">输入长度：</label>
                             <select id="inputLength" name="input_lens" multiple class="form-select">
                                 <option value="1">1</option>
                                 <option value="64">64</option>
@@ -212,7 +245,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="outputLength" class="form-label">输出max_tokens长度：</label>
+                            <label for="outputLength" class="form-label" data-lang-key="outputLength">输出max_tokens长度：</label>
                             <select id="outputLength" name="output_lens" multiple class="form-select">
                                 <option value="1">1</option>
                                 <option value="64">64</option>
@@ -224,26 +257,26 @@
 
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="randomString" name="RANDOM_STRING">
-                            <label class="form-check-label" for="randomString">使用随机字符串</label>
+                            <label class="form-check-label" for="randomString" data-lang-key="useRandomString">使用随机字符串</label>
                         </div>
 
                         <div class="mb-3">
-                            <label for="executionTime" class="form-label">执行时间（秒）：</label>
+                            <label for="executionTime" class="form-label" data-lang-key="executionTime">执行时间（秒）：</label>
                             <input type="number" id="executionTime" name="time_" min="1" class="form-control" value="120">
                         </div>
 
                         <div class="mb-3">
-                            <label for="concurrency" class="form-label">并发数：</label>
+                            <label for="concurrency" class="form-label" data-lang-key="concurrency">并发数：</label>
                             <input type="number" id="concurrency" name="user" min="1" class="form-control" value="10">
                         </div>
 
                         <div class="mb-3">
-                            <label for="rate" class="form-label">请求速率：</label>
+                            <label for="rate" class="form-label" data-lang-key="requestRate">请求速率：</label>
                             <input type="number" id="rate" name="rate" min="1" class="form-control" value="10">
                         </div>
 
                         <div class="mb-3">
-                            <label for="tags" class="form-label">标签：</label>
+                            <label for="tags" class="form-label" data-lang-key="tags">标签：</label>
                             <select id="tags" name="tags" class="form-select">
                                 <option value="chat_completions">chat_completions</option>
                                 <option value="completions">completions</option>
@@ -252,34 +285,34 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="remark" class="form-label">备注：</label>
+                            <label for="remark" class="form-label" data-lang-key="remark">备注：</label>
                             <input type="text" id="remark" name="remark" class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label for="host" class="form-label">主机：</label>
-                            <input type="url" id="host" name="host" class="form-control" value="https://api.openai.com">
+                            <label for="host" class="form-label" data-lang-key="host">主机：</label>
+                            <input type="url" id="host" name="host" class="form-control" value="https://easycoder.puhuacloud.com">
                         </div>
 
                         <div class="mb-3">
-                            <label for="model" class="form-label">模型：</label>
+                            <label for="model" class="form-label" data-lang-key="model">模型：</label>
                             <input type="text" id="model" name="model" class="form-control" value="codechat">
                         </div>
 
                         <div class="mb-3">
-                            <label for="apiKey" class="form-label">API Key：</label>
+                            <label for="apiKey" class="form-label" data-lang-key="apiKey">API Key：</label>
                             <input type="text" id="apiKey" name="API_KEY" class="form-control">
                         </div>
 
                         <button type="submit" class="btn btn-primary mt-4 w-100">
-                            <i class="fas fa-play me-2"></i>开始测试
+                            <i class="fas fa-play me-2"></i><span data-lang-key="startTest">开始测试</span>
                         </button>
                     </form>
                 </div>
             </div>
             <div class="col-md-7">
                 <div class="card p-4 animate-fade-in">
-                    <h2><i class="fas fa-chart-bar me-2"></i>测试结果</h2>
+                    <h2><i class="fas fa-chart-bar me-2"></i><span data-lang-key="testResults">测试结果</span></h2>
                     <div id="resultTable" class="mt-4"></div>
                 </div>
             </div>
@@ -288,6 +321,58 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const languages = {
+            zh: {
+                title: "VLLM私有模型openai接口压力测试",
+                settings: "设置",
+                generalSettings: "常规设置",
+                inputLength: "输入长度：",
+                outputLength: "输出max_tokens长度：",
+                useRandomString: "使用随机字符串",
+                executionTime: "执行时间（秒）：",
+                concurrency: "并发数：",
+                requestRate: "请求速率：",
+                tags: "标签：",
+                remark: "备注：",
+                host: "主机：",
+                model: "模型：",
+                apiKey: "API Key：",
+                startTest: "开始测试",
+                testResults: "测试结果",
+            },
+            en: {
+                title: "VLLM Private Model OpenAI API Stress Test",
+                settings: "Settings",
+                generalSettings: "General Settings",
+                inputLength: "Input Length:",
+                outputLength: "Output Max Tokens Length:",
+                useRandomString: "Use Random String",
+                executionTime: "Execution Time (seconds):",
+                concurrency: "Concurrency:",
+                requestRate: "Request Rate:",
+                tags: "Tags:",
+                remark: "Remark:",
+                host: "Host:",
+                model: "Model:",
+                apiKey: "API Key:",
+                startTest: "Start Test",
+                testResults: "Test Results",
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (languages[lang] && languages[lang][key]) {
+                    element.textContent = languages[lang][key];
+                }
+            });
+        }
+
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            changeLanguage(this.value);
+        });
+
         $(document).ready(function() {
             $('#inputLength, #outputLength').select2({
                 placeholder: "选择长度",
@@ -355,6 +440,9 @@
                 resultTable.classList.add('animate-fade-in');
             }
         });
+
+        // Initialize with default language (English)
+        changeLanguage('en');
     </script>
 </body>
 </html>
