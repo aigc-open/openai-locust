@@ -8,6 +8,7 @@ import pandas as pd
 from loguru import logger
 import time
 import uvicorn
+import platform
 
 app = FastAPI()
 
@@ -41,8 +42,17 @@ def task(model: str, INPUT_LENS: str, OUTPUT_LENS: str, user: int = 10, rate: in
     else:
         RANDOM_STRING = ""
 
-    # 在命令中添加 --host 参数
-    os.system(f"RANDOM_STRING={RANDOM_STRING} INPUT_LENS={INPUT_LENS} OUTPUT_LENS={OUTPUT_LENS} model={model} API_KEY={API_KEY} locust -f src/job.py --host {host} --tags {tags} --headless -u {user} -r {rate} --run-time {time_} --only-summary --csv csv")
+    # 方法1：使用系统特定的命令
+    if platform.system() == "Windows":
+        # Windows 命令格式
+        cmd = f"SET RANDOM_STRING={RANDOM_STRING} & SET INPUT_LENS={INPUT_LENS} & SET OUTPUT_LENS={OUTPUT_LENS} & SET model={model} & SET API_KEY={API_KEY} & "
+    else:
+        # Linux/macOS 命令格式
+        cmd = f"RANDOM_STRING={RANDOM_STRING} INPUT_LENS={INPUT_LENS} OUTPUT_LENS={OUTPUT_LENS} model={model} API_KEY={API_KEY} "
+
+    # 添加locust命令
+    cmd += f"locust -f src/job.py --host {host} --tags {tags} --headless -u {user} -r {rate} --run-time {time_} --only-summary --csv csv"
+    os.system(cmd)
 
     # 读取 CSV 文件
     data = pd.read_csv(f"csv_stats.csv")
@@ -83,7 +93,7 @@ async def run_task(task_request: TaskRequest):
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index():
-    with open("templates/index.html") as f:
+    with open("templates/index.html", encoding="utf8") as f:
         return f.read()
 
 # 运行 FastAPI 应用
