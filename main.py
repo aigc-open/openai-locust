@@ -51,7 +51,7 @@ def task(model: str, INPUT_LENS: str, OUTPUT_LENS: str, user: int = 10, rate: in
         cmd = f"RANDOM_STRING={RANDOM_STRING} INPUT_LENS={INPUT_LENS} OUTPUT_LENS={OUTPUT_LENS} model={model} API_KEY={API_KEY} "
 
     # 添加locust命令
-    cmd += f"locust -f src/job.py --host {host} --tags {tags} --headless -u {user} -r {rate} --run-time {time_} --only-summary --csv csv"
+    cmd += f"locust -f src/job.py --host {host} --tags {tags.value} --headless -u {user} -r {rate} --run-time {time_} --only-summary --csv csv"
     os.system(cmd)
 
     # 读取 CSV 文件
