@@ -3,3 +3,4 @@ uvicorn
 loguru
 fastapi
 pandas
+numpy<2.0.0
